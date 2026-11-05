@@ -1,0 +1,8 @@
+import Link from "next/link";
+import { MapPin, Phone, Mail, ArrowUpRight } from "lucide-react";
+export default function Footer(){return <footer className="footer"><div className="container footer-grid">
+  <div><Link href="/" className="brand brand-light"><span className="brand-mark">JTECH<span className="brand-ai">AI</span></span><small>Mechatronics and AI Solutions Pvt Ltd</small></Link><p className="footer-about">Engineering-led solutions across industrial automation, AI, embedded systems, robotics, instrumentation and connected technologies.</p><Link href="/about" className="footer-link">Discover Jtech <ArrowUpRight size={14}/></Link></div>
+  <div><h4>Explore</h4><Link href="/about">About Us</Link><Link href="/products">Products & Solutions</Link><Link href="/services">Services</Link><Link href="/projects">Projects</Link><Link href="/careers">Careers</Link></div>
+  <div><h4>Contact</h4><p><MapPin size={16}/> Plot No. 292, Srinivasa Nagar,<br/>Rampally, Hyderabad – 501301</p><a href="tel:+917780646425"><Phone size={16}/> +91 77806 46425</a><a href="mailto:info@jtech-ai.com"><Mail size={16}/> info@jtech-ai.com</a></div>
+  <div className="footer-cta"><span className="eyebrow">HAVE A PROJECT IN MIND?</span><h3>Let's engineer what's next.</h3><Link href="/contact" className="button button-cyan">Talk to our team <ArrowUpRight size={16}/></Link></div>
+</div><div className="container footer-bottom"><span>© {new Date().getFullYear()} Jtech Mechatronics and AI Solutions Pvt. Ltd.</span><span><Link href="/privacy">Privacy</Link> · <Link href="/admin">Admin</Link></span></div></footer>}

@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("ADMIN")
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  auditLogs    AuditLog[]
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?   @db.Text
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  products    Product[]
+  services    Service[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id             String    @id @default(cuid())
+  categoryId     String?
+  category       Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  title          String
+  slug           String    @unique
+  summary        String    @db.VarChar(500)
+  description    String    @db.Text
+  imageUrl       String?
+  features       Json?
+  specifications Json?
+  applications   Json?
+  datasheetUrl   String?
+  isPublished    Boolean   @default(false)
+  sortOrder      Int       @default(0)
+  seoTitle       String?
+  seoDescription String?   @db.VarChar(320)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  @@index([isPublished, sortOrder])
+}
+
+model Service {
+  id             String    @id @default(cuid())
+  categoryId     String?
+  category       Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  title          String
+  slug           String    @unique
+  summary        String    @db.VarChar(500)
+  description    String    @db.Text
+  imageUrl       String?
+  isPublished    Boolean   @default(false)
+  sortOrder      Int       @default(0)
+  seoTitle       String?
+  seoDescription String?   @db.VarChar(320)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  @@index([isPublished, sortOrder])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  industry    String?
+  summary     String   @db.VarChar(500)
+  challenge   String   @db.Text
+  solution    String   @db.Text
+  outcome     String?  @db.Text
+  imageUrl    String?
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([isPublished, createdAt])
+}
+
+model Enquiry {
+  id          String   @id @default(cuid())
+  referenceNo String   @unique
+  name        String
+  company     String?
+  email       String
+  phone       String
+  enquiryType String
+  category    String?
+  subject     String
+  message     String   @db.Text
+  status      String   @default("NEW")
+  adminNotes  String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([createdAt])
+  @@index([status])
+}
+
+model AuditLog {
+  id          String    @id @default(cuid())
+  adminUserId String
+  adminUser   AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+  action      String
+  entityType  String
+  entityId    String?
+  metadata    Json?
+  createdAt   DateTime  @default(now())
+  @@index([createdAt])
+}
+
+
+model RateLimitBucket {
+  key         String   @id
+  attempts    Int      @default(0)
+  windowStart DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
